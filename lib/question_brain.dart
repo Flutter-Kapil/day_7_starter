@@ -2,6 +2,8 @@ import 'question.dart';
 
 class QuizBrain {
   int questionNumber = 0;
+  int right = 0;
+  int wrong = 0;
   List<Question> questions = [
     Question('The Mahabharata is a part of The Bhagavad Gita', false),
     Question(
@@ -35,12 +37,14 @@ class QuizBrain {
     return questions[questionNumber];
   }
 
-  bool checkAnswer(bool userAnswer) {
-    if (questions[questionNumber].ans == true)
-      return true;
-    else
-      return false;
-  }
+  bool checkAnswer(bool userAnswer) =>
+      (userAnswer == questions[questionNumber].ans);
 
   void nextQuestion() => questionNumber++;
+
+  void reset() {
+    questionNumber = 0;
+    right = 0;
+    wrong = 0;
+  }
 }

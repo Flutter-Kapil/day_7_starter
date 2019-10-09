@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'question.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'question_brain.dart';
 
 void main() {
@@ -32,7 +32,6 @@ class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
 
   QuizBrain brain = QuizBrain();
-
   void checkAnswer(bool userAnswer) {
     setState(() {
       brain.getCurrentQuestion();
@@ -41,6 +40,7 @@ class _QuizPageState extends State<QuizPage> {
           Icons.check,
           color: Colors.green,
         ));
+        brain.right++;
       } else {
         scoreKeeper.add(Icon(
           Icons.close,
@@ -48,6 +48,31 @@ class _QuizPageState extends State<QuizPage> {
         ));
       }
       brain.nextQuestion();
+
+      if (brain.questionNumber > brain.questions.length - 1) {
+        Alert(
+          context: context,
+          type: AlertType.error,
+          title: "Quiz Completed",
+          desc: "You scored ${brain.right}/${brain.questions.length}",
+          buttons: [
+            DialogButton(
+              child: Text(
+                "Restart",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              onPressed: () {
+                scoreKeeper.clear();
+                brain.reset();
+                setState(() {});
+                return Navigator.pop(context);
+              },
+              width: 120,
+            )
+          ],
+        ).show();
+        brain.questionNumber = 0;
+      }
     });
   }
 
@@ -106,6 +131,10 @@ class _QuizPageState extends State<QuizPage> {
               ),
               onPressed: () {
                 checkAnswer(false);
+                if (brain.questionNumber == brain.questions.length) {
+                  brain.questionNumber = 0;
+                  scoreKeeper.clear();
+                }
               },
             ),
           ),
