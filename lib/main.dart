@@ -52,7 +52,6 @@ class _QuizPageState extends State<QuizPage> {
       if (brain.questionNumber > brain.questions.length - 1) {
         Alert(
           context: context,
-          type: AlertType.error,
           title: "Quiz Completed",
           desc: "You scored ${brain.right}/${brain.questions.length}",
           buttons: [
